@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CCC 4-Corner Scale Sheet</title>
+  <style>
+    :root{
+      --page-w: 1024px;
+      --gap: 14px;
+      --border: 2px;
+      --radius: 14px;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    body{
+      margin:0;
+      background:#f2f2f2;
+      font-family:var(--font);
+      color:#111;
+      display:flex;
+      justify-content:center;
+      padding:16px;
+    }
+    .page{
+      width: min(var(--page-w), 100%);
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:18px;
+      box-shadow: 0 8px 22px rgba(0,0,0,.08);
+      padding: 18px;
+    }
+    .logo{
+      display:flex;
+      justify-content:center;
+      margin-top:4px;
+      margin-bottom:10px;
+    }
+    .logo img{ max-width: 420px; width: 60%; height:auto; }
+    .meta{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+      align-items:end;
+      margin: 6px 0 14px;
+    }
+    .meta2{
+      display:grid;
+      grid-template-columns: 2fr 1fr;
+      gap:10px;
+      margin-bottom: 14px;
+    }
+    .field{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .field label{
+      font-weight:700;
+      font-size:14px;
+    }
+    input[type="text"], input[type="number"]{
+      width:100%;
+      padding:10px 10px;
+      border:1px solid #bbb;
+      border-radius:10px;
+      font-size:16px;
+      outline:none;
+      background:#fff;
+    }
+    input[type="number"]{ appearance:textfield; }
+    .grid{
+      display:grid;
+      grid-template-columns: 280px 1fr 280px;
+      gap: var(--gap);
+      align-items:start;
+    }
+    .carWrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 12px;
+    }
+    .carWrap img{
+      width: 100%;
+      max-width: 420px;
+      height:auto;
+      object-fit:contain;
+    }
+    .block{
+      border: var(--border) solid #111;
+      border-radius: var(--radius);
+      padding: 10px 10px 12px;
+      margin-bottom: 12px;
+    }
+    .block h3{
+      margin:0 0 8px;
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .rows{
+      display:grid;
+      grid-template-columns: 72px 1fr 1fr 42px;
+      gap:8px;
+      align-items:center;
+    }
+    .rows .rowlbl{
+      font-weight:700;
+      font-size:13px;
+    }
+    .unit{
+      font-weight:700;
+      font-size:13px;
+      text-align:right;
+      opacity:.9;
+    }
+    .small{
+      font-size:12px;
+      opacity:.8;
+      margin-top: 8px;
+    }
+    .bottom{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+      margin-top: 6px;
+    }
+    .notes{
+      margin-top: 10px;
+      border-top:1px solid #e3e3e3;
+      padding-top: 10px;
+    }
+    textarea{
+      width:100%;
+      min-height: 100px;
+      border:1px solid #bbb;
+      border-radius:12px;
+      padding:10px;
+      font-size:15px;
+      resize:vertical;
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      margin-top: 10px;
+    }
+    .btn{
+      border:1px solid #111;
+      background:#111;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .btn.secondary{
+      background:#fff;
+      color:#111;
+    }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr; }
+      .bottom{ grid-template-columns: 1fr; }
+      .meta{ grid-template-columns: 1fr; }
+      .meta2{ grid-template-columns: 1fr; }
+      .logo img{ width: 80%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <div class="logo">
+      <img src="ccc-logo.png" alt="CCC Motorsports" />
+    </div>
+
+    <div class="meta">
+      <div class="field"><label>CAR YEAR:</label><input id="car_year" type="text" /></div>
+      <div class="field"><label>MAKE:</label><input id="make" type="text" /></div>
+      <div class="field"><label>MODEL:</label><input id="model" type="text" /></div>
+    </div>
+
+    <div class="meta2">
+      <div class="field"><label>OWNER:</label><input id="owner" type="text" /></div>
+      <div class="field"><label>DATE:</label><input id="date" type="text" placeholder="__/__/____" /></div>
+    </div>
+
+    <!-- LEFT / CENTER / RIGHT -->
+    <div class="grid">
+      <div>
+        <div class="block"><h3>LF – LEFT FRONT</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="LF_before_lbs" type="number" step="0.1"/><input data-k="LF_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="LF_after_lbs" type="number" step="0.1"/><input data-k="LF_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div><div class="small">lbs entered; % auto</div>
+        </div>
+
+        <div class="block"><h3>LEFT SIDE</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="LEFT_before_lbs" type="number" step="0.1"/><input data-k="LEFT_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="LEFT_after_lbs" type="number" step="0.1"/><input data-k="LEFT_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+
+        <div class="block"><h3>LR – LEFT REAR</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="LR_before_lbs" type="number" step="0.1"/><input data-k="LR_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="LR_after_lbs" type="number" step="0.1"/><input data-k="LR_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carWrap">
+        <div class="block" style="width:100%;"><h3>FRONT AXLE</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="FRONT_before_lbs" type="number" step="0.1"/><input data-k="FRONT_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="FRONT_after_lbs" type="number" step="0.1"/><input data-k="FRONT_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+
+        <img src="mustang-top.png" alt="1967 Mustang top view" />
+
+        <div class="block" style="width:100%;"><h3>REAR AXLE</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="REAR_before_lbs" type="number" step="0.1"/><input data-k="REAR_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="REAR_after_lbs" type="number" step="0.1"/><input data-k="REAR_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="block"><h3>RF – RIGHT FRONT</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="RF_before_lbs" type="number" step="0.1"/><input data-k="RF_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="RF_after_lbs" type="number" step="0.1"/><input data-k="RF_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+
+        <div class="block"><h3>RIGHT SIDE</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="RIGHT_before_lbs" type="number" step="0.1"/><input data-k="RIGHT_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="RIGHT_after_lbs" type="number" step="0.1"/><input data-k="RIGHT_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+
+        <div class="block"><h3>RR – RIGHT REAR</h3>
+          <div class="rows">
+            <div class="rowlbl">Before</div><input data-k="RR_before_lbs" type="number" step="0.1"/><input data-k="RR_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+            <div class="rowlbl">After</div><input data-k="RR_after_lbs" type="number" step="0.1"/><input data-k="RR_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="block"><h3>CROSS WEIGHT (LF + RR)</h3>
+        <div class="rows">
+          <div class="rowlbl">Before</div><input data-k="CROSS_before_lbs" type="number" step="0.1"/><input data-k="CROSS_before_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+          <div class="rowlbl">After</div><input data-k="CROSS_after_lbs" type="number" step="0.1"/><input data-k="CROSS_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
+        </div>
+      </div>
+
+      <div class="block"><h3>TOTAL VEHICLE WEIGHT</h3>
+        <div class="rows" style="grid-template-columns:72px 1fr 1fr 42px;">
+          <div class="rowlbl">Before</div><input data-k="TOTAL_before_lbs" type="number" step="0.1"/><div></div><div class="unit">lbs</div>
+          <div class="rowlbl">After</div><input data-k="TOTAL_after_lbs" type="number" step="0.1"/><div></div><div class="unit">lbs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h3 style="margin:6px 0 8px;">NOTES / ADJUSTMENTS</h3>
+      <textarea id="notes" placeholder="Adjustments, ballast moves, spring changes, tire pressure, etc."></textarea>
+      <div class="toolbar">
+        <button class="btn secondary" id="clearBtn" type="button">Clear all weights</button>
+        <button class="btn" id="printBtn" type="button">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIXED SCRIPT -->
+<script>
+const inputs = [...document.querySelectorAll('input[data-k]')];
+const map = new Map(inputs.map(i => [i.dataset.k, i]));
+
+function num(v){
+  if(v===null||v===undefined) return null;
+  const s=String(v).trim();
+  if(!s) return null;
+  const f=parseFloat(s);
+  return Number.isFinite(f)?f:null;
+}
+function getKey(k){ return num(map.get(k)?.value); }
+
+const fmtLbs = (x)=>(Math.round(x*10)/10).toFixed(1);
+const fmtPct = (x)=>(Math.round(x*10)/10).toFixed(1);
+
+// Track manual edits (inputs) and auto-calculated values
+const userEdited = new Set();
+
+function setAuto(k, v, fmt){
+  const el = map.get(k);
+  if(!el) return;
+  if(v===null||v===undefined||!Number.isFinite(v)) return;
+
+  const cur = String(el.value ?? '').trim();
+  const isAuto = el.dataset.auto === "1";
+
+  // Never overwrite user-entered values
+  if(userEdited.has(k)) return;
+
+  // Overwrite if blank OR previously auto-set
+  if(cur==="" || isAuto){
+    el.value = fmt(v);
+    el.dataset.auto = "1";
+  }
+}
+
+// ---------- UI: conflict banner ----------
+function ensureBanner(){
+  let b = document.getElementById("conflictBanner");
+  if(b) return b;
+  b = document.createElement("div");
+  b.id = "conflictBanner";
+  b.style.cssText = `
+    display:none;
+    margin: 10px 0 14px;
+    padding: 10px 12px;
+    border: 2px solid #b00020;
+    background: #ffe9ee;
+    border-radius: 12px;
+    font-weight: 800;
+  `;
+  b.textContent = "Conflicting inputs — fix the red fields.";
+  const app = document.getElementById("app");
+  app.insertBefore(b, app.children[3]); // after meta lines
+  return b;
+}
+const banner = ensureBanner();
+
+function markConflict(k, isBad){
+  const el = map.get(k);
+  if(!el) return;
+  if(isBad){
+    el.style.border = "2px solid #b00020";
+    el.style.background = "#ffe9ee";
+    el.dataset.conflict = "1";
+  }else{
+    el.style.border = "";
+    el.style.background = "";
+    el.dataset.conflict = "0";
+  }
+}
+
+function clearAllConflicts(){
+  for(const [k, el] of map){
+    if(k.endsWith("_lbs")){
+      markConflict(k, false);
+    }
+  }
+  banner.style.display = "none";
+}
+
+function showBannerIfNeeded(){
+  for(const [k, el] of map){
+    if(el.dataset.conflict === "1"){
+      banner.style.display = "block";
+      return;
+    }
+  }
+  banner.style.display = "none";
+}
+
+// ---------- Safe derivations ----------
+function safeDerive(prefix){
+  const k = (name)=>`${name}_${prefix}_lbs`;
+
+  const LF = getKey(k("LF"));
+  const RF = getKey(k("RF"));
+  const LR = getKey(k("LR"));
+  const RR = getKey(k("RR"));
+
+  const FRONT = getKey(k("FRONT"));
+  const REAR  = getKey(k("REAR"));
+  const LEFT  = getKey(k("LEFT"));
+  const RIGHT = getKey(k("RIGHT"));
+  const CROSS = getKey(k("CROSS"));
+  const TOTAL = getKey(k("TOTAL"));
+
+  // direct sums
+  if(LF!=null && RF!=null) setAuto(k("FRONT"), LF+RF, fmtLbs);
+  if(LR!=null && RR!=null) setAuto(k("REAR"),  LR+RR, fmtLbs);
+  if(LF!=null && LR!=null) setAuto(k("LEFT"),  LF+LR, fmtLbs);
+  if(RF!=null && RR!=null) setAuto(k("RIGHT"), RF+RR, fmtLbs);
+  if(LF!=null && RR!=null) setAuto(k("CROSS"), LF+RR, fmtLbs);
+  if(LF!=null && RF!=null && LR!=null && RR!=null) setAuto(k("TOTAL"), LF+RF+LR+RR, fmtLbs);
+
+  // total relations
+  const FRONT2 = getKey(k("FRONT"));
+  const REAR2  = getKey(k("REAR"));
+  const TOTAL2 = getKey(k("TOTAL"));
+  if(TOTAL2!=null && FRONT2!=null) setAuto(k("REAR"), TOTAL2-FRONT2, fmtLbs);
+  if(TOTAL2!=null && REAR2!=null)  setAuto(k("FRONT"), TOTAL2-REAR2, fmtLbs);
+  if(FRONT2!=null && REAR2!=null)  setAuto(k("TOTAL"), FRONT2+REAR2, fmtLbs);
+
+  const LEFT2  = getKey(k("LEFT"));
+  const RIGHT2 = getKey(k("RIGHT"));
+  const TOTAL3 = getKey(k("TOTAL"));
+  if(TOTAL3!=null && LEFT2!=null)  setAuto(k("RIGHT"), TOTAL3-LEFT2, fmtLbs);
+  if(TOTAL3!=null && RIGHT2!=null) setAuto(k("LEFT"),  TOTAL3-RIGHT2, fmtLbs);
+  if(LEFT2!=null && RIGHT2!=null)  setAuto(k("TOTAL"), LEFT2+RIGHT2, fmtLbs);
+
+  // algebra backfills
+  const FRONT3 = getKey(k("FRONT"));
+  const REAR3  = getKey(k("REAR"));
+  const LEFT3  = getKey(k("LEFT"));
+  const RIGHT3 = getKey(k("RIGHT"));
+  const CROSS3 = getKey(k("CROSS"));
+
+  if(FRONT3!=null && LF!=null) setAuto(k("RF"), FRONT3-LF, fmtLbs);
+  if(FRONT3!=null && RF!=null) setAuto(k("LF"), FRONT3-RF, fmtLbs);
+
+  if(REAR3!=null && LR!=null) setAuto(k("RR"), REAR3-LR, fmtLbs);
+  if(REAR3!=null && RR!=null) setAuto(k("LR"), REAR3-RR, fmtLbs);
+
+  if(LEFT3!=null && LF!=null) setAuto(k("LR"), LEFT3-LF, fmtLbs);
+  if(LEFT3!=null && LR!=null) setAuto(k("LF"), LEFT3-LR, fmtLbs);
+
+  if(RIGHT3!=null && RF!=null) setAuto(k("RR"), RIGHT3-RF, fmtLbs);
+  if(RIGHT3!=null && RR!=null) setAuto(k("RF"), RIGHT3-RR, fmtLbs);
+
+  if(CROSS3!=null && LF!=null) setAuto(k("RR"), CROSS3-LF, fmtLbs);
+  if(CROSS3!=null && RR!=null) setAuto(k("LF"), CROSS3-RR, fmtLbs);
+
+  const LF4 = getKey(k("LF")), RF4=getKey(k("RF")), LR4=getKey(k("LR")), RR4=getKey(k("RR")), T4=getKey(k("TOTAL"));
+  if(T4!=null){
+    if(LF4!=null && RF4!=null && LR4!=null) setAuto(k("RR"), T4-LF4-RF4-LR4, fmtLbs);
+    if(LF4!=null && RF4!=null && RR4!=null) setAuto(k("LR"), T4-LF4-RF4-RR4, fmtLbs);
+    if(LF4!=null && LR4!=null && RR4!=null) setAuto(k("RF"), T4-LF4-LR4-RR4, fmtLbs);
+    if(RF4!=null && LR4!=null && RR4!=null) setAuto(k("LF"), T4-RF4-LR4-RR4, fmtLbs);
+  }
+}
+
+// ---------- Consistency checks (Option B magic) ----------
+function approxEq(a,b){
+  return Math.abs(a-b) <= 0.2; // tolerance for rounding/typing
+}
+
+function checkConflicts(prefix){
+  // Build predicted values from whatever the calculator can infer
+  // We'll do a few passes of safeDerive on a shadow model by reading current fields after fill.
+  // Then compare userEdited fields against what they should be.
+
+  // Clear conflicts for this pass
+  for(const key of userEdited){
+    if(key.endsWith(`_${prefix}_lbs`)) markConflict(key, false);
+  }
+
+  const K = (name)=>`${name}_${prefix}_lbs`;
+  const vals = (name)=>getKey(K(name));
+
+  const LF = vals("LF"), RF=vals("RF"), LR=vals("LR"), RR=vals("RR");
+  const FRONT = vals("FRONT"), REAR=vals("REAR"), LEFT=vals("LEFT"), RIGHT=vals("RIGHT"), CROSS=vals("CROSS"), TOTAL=vals("TOTAL");
+
+  // Expected equations (only check when both sides are known)
+  const checks = [
+    ["FRONT", FRONT, (LF!=null&&RF!=null)? LF+RF : null],
+    ["REAR",  REAR,  (LR!=null&&RR!=null)? LR+RR : null],
+    ["LEFT",  LEFT,  (LF!=null&&LR!=null)? LF+LR : null],
+    ["RIGHT", RIGHT, (RF!=null&&RR!=null)? RF+RR : null],
+    ["CROSS", CROSS, (LF!=null&&RR!=null)? LF+RR : null],
+    ["TOTAL", TOTAL, (LF!=null&&RF!=null&&LR!=null&&RR!=null)? LF+RF+LR+RR : null],
+  ];
+
+  let anyBad = false;
+  for(const [name, actual, expected] of checks){
+    const key = K(name);
+    if(!userEdited.has(key)) continue;       // only flag fields the user typed
+    if(actual==null || expected==null) continue;
+    if(!approxEq(actual, expected)){
+      markConflict(key, true);
+      anyBad = true;
+    }
+  }
+
+  // Also check corners if user typed them and a related equation is fully known
+  const cornerChecks = [
+    ["LF", LF, (FRONT!=null&&RF!=null)? FRONT-RF : (LEFT!=null&&LR!=null)? LEFT-LR : (CROSS!=null&&RR!=null)? CROSS-RR : null],
+    ["RF", RF, (FRONT!=null&&LF!=null)? FRONT-LF : (RIGHT!=null&&RR!=null)? RIGHT-RR : null],
+    ["LR", LR, (REAR!=null&&RR!=null)? REAR-RR : (LEFT!=null&&LF!=null)? LEFT-LF : null],
+    ["RR", RR, (REAR!=null&&LR!=null)? REAR-LR : (RIGHT!=null&&RF!=null)? RIGHT-RF : (CROSS!=null&&LF!=null)? CROSS-LF : null],
+  ];
+  for(const [name, actual, expected] of cornerChecks){
+    const key = K(name);
+    if(!userEdited.has(key)) continue;
+    if(actual==null || expected==null) continue;
+    if(!approxEq(actual, expected)){
+      markConflict(key, true);
+      anyBad = true;
+    }
+  }
+
+  if(anyBad) banner.style.display = "block";
+  else banner.style.display = "none";
+}
+
+function fillPct(prefix){
+  const total=getKey(`TOTAL_${prefix}_lbs`);
+  if(total==null || Math.abs(total)<1e-9) return;
+  const bases=["LF","RF","LR","RR","FRONT","REAR","LEFT","RIGHT","CROSS"];
+  for(const b of bases){
+    const v=getKey(`${b}_${prefix}_lbs`);
+    if(v==null) continue;
+    setAuto(`${b}_${prefix}_pct`, (v/total)*100, fmtPct);
+  }
+}
+
+function recalc(prefix){
+  // multiple safe passes
+  for(let i=0;i<5;i++) safeDerive(prefix);
+  fillPct(prefix);
+  checkConflicts(prefix);
+}
+
+function recalcAll(){
+  clearAllConflicts();
+  recalc('before');
+  recalc('after');
+  showBannerIfNeeded();
+}
+
+// Debounce
+let t=null;
+function scheduleRecalc(){
+  clearTimeout(t);
+  t=setTimeout(recalcAll, 250);
+}
+
+// Mark manual edits
+inputs.forEach(el=>{
+  const k=el.dataset.k;
+  if(!k) return;
+  if(k.endsWith('_lbs')){
+    el.addEventListener('input', ()=>{
+      if(String(el.value ?? '').trim()===""){
+        userEdited.delete(k);
+        el.dataset.auto="0";
+      }else{
+        userEdited.add(k);
+        el.dataset.auto="0";
+      }
+      scheduleRecalc();
+    });
+  }
+});
+
+// Buttons
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  for(const [k,el] of map){
+    el.value='';
+    el.dataset.auto="0";
+    el.dataset.conflict="0";
+    el.style.border="";
+    el.style.background="";
+  }
+  userEdited.clear();
+  banner.style.display="none";
+  recalcAll();
+});
+document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+
+// init
+recalcAll();
+</script>
+
+
+</body>
+</html>
