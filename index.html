@@ -1,36 +1,64 @@
-<!doctype html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CCC 4-Corner Scale Sheet</title>
   <style>
     :root{
-      --page-w: 1024px;
+      --page-w: 1180px;
       --gap: 14px;
       --border: 2px;
       --radius: 14px;
       --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 
       /* CAD-like layout tuning knobs */
-      --car-max: 420px;          /* car image max width */
-      --side-col-w: 280px;       /* left/right column width */
-      --side-y-nudge: 0px;       /* optional fine-tune: e.g. 18px, 28px */
+      --car-max: 420px;
+      --side-col-w: 360px;
+      --side-y-nudge: 0px;
+
+      /* Theme */
+      --bg: #f2f2f2;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: rgba(0,0,0,.65);
+      --line: #111111;
+      --softline: #dcdcdc;
+      --fieldbg: #ffffff;
+      --fieldline: #bbbbbb;
+      --danger: #b00020;
+      --dangerbg: #ffe9ee;
+      --btnbg: #111111;
+      --btntext: #ffffff;
+    }
+    body.dark{
+      --bg: #0f1115;
+      --card: #151922;
+      --text: #f2f2f2;
+      --muted: rgba(255,255,255,.65);
+      --line: #e7e7e7;
+      --softline: rgba(255,255,255,.15);
+      --fieldbg: #0f1115;
+      --fieldline: rgba(255,255,255,.25);
+      --btnbg: #f2f2f2;
+      --btntext: #111111;
+      --danger: #ff4d6d;
+      --dangerbg: rgba(255,77,109,.15);
     }
 
     body{
       margin:0;
-      background:#f2f2f2;
+      background:var(--bg);
       font-family:var(--font);
-      color:#111;
+      color:var(--text);
       display:flex;
       justify-content:center;
       padding:16px;
     }
     .page{
       width: min(var(--page-w), 100%);
-      background:#fff;
-      border:1px solid #ddd;
+      background:var(--card);
+      border:1px solid var(--softline);
       border-radius:18px;
       box-shadow: 0 8px 22px rgba(0,0,0,.08);
       padding: 18px;
@@ -50,13 +78,13 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap:10px;
       align-items:end;
-      margin: 6px 0 14px;
+      margin: 6px 0 10px;
     }
     .meta2{
       display:grid;
       grid-template-columns: 2fr 1fr;
       gap:10px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .field{
       display:flex;
@@ -66,72 +94,128 @@
     }
     .field label{
       font-weight:700;
-      font-size:14px;
+      font-size:13px;
+      color:var(--text);
     }
+
     input[type="text"], input[type="number"]{
       width:100%;
       padding:10px 10px;
-      border:1px solid #bbb;
+      border:1px solid var(--fieldline);
       border-radius:10px;
       font-size:16px;
       outline:none;
-      background:#fff;
+      background:var(--fieldbg);
+      color:var(--text);
+      box-sizing:border-box;
     }
     input[type="number"]{ appearance:textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+input[type="number"]{ -moz-appearance: textfield; }
+    input[data-k$="_pct"]{ max-width: 90px; }
+
+
+    /* Top tools bar */
+    .topbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      margin: 8px 0 14px;
+      border-top:1px solid var(--softline);
+      padding-top: 12px;
+    }
+    .topbar .group{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .select{
+      padding:10px 10px;
+      border:1px solid var(--fieldline);
+      border-radius:10px;
+      background:var(--fieldbg);
+      color:var(--text);
+      font-size:15px;
+      min-width: 240px;
+    }
+    .pill{
+      font-weight:800;
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--softline);
+      color:var(--text);
+      background:transparent;
+      cursor:pointer;
+    }
+
+    /* Conflict banner */
+    #conflictBanner{
+      display:none;
+      margin: 10px 0 14px;
+      padding: 10px 12px;
+      border: 2px solid var(--danger);
+      background: var(--dangerbg);
+      border-radius: 12px;
+      font-weight: 800;
+    }
 
     /* Blocks */
     .block{
-      border: var(--border) solid #111;
+      border: var(--border) solid var(--line);
       border-radius: var(--radius);
       padding: 10px 10px 12px;
       margin-bottom: 12px;
+      background: transparent;
     }
     .block h3{
       margin:0 0 8px;
       font-size: 14px;
       letter-spacing:.2px;
     }
+
+    /* Give lbs column more room than % column */
     .rows{
       display:grid;
-      grid-template-columns: 72px 1fr 1fr 42px;
-      gap:8px;
+      /* Fits inside side blocks while keeping lbs readable (4+ digits) and pct tight (e.g., 49.7) */
+      grid-template-columns: 56px minmax(150px, 1fr) 72px 22px; /* rowlabel | lbs | % | unit */
+      gap:6px;
       align-items:center;
     }
     .rows .rowlbl{
       font-weight:700;
-      font-size:13px;
+      font-size:12px;
     }
     .unit{
       font-weight:700;
-      font-size:13px;
+      font-size:12px;
       text-align:right;
       opacity:.9;
     }
-    .small{
-      font-size:12px;
-      opacity:.8;
-      margin-top: 8px;
-    }
 
-    /* ==========================
-       CAD-LIKE MAIN LAYOUT
-       ==========================
-       3 columns (Left / Center / Right)
-       3 rows in the CENTER column (Front axle / Car / Rear axle)
-       Left + Right columns are pinned to the CAR row and vertically centered there.
-    */
-    .layout{
+    /* CAD-LIKE MAIN LAYOUT */
+    .layoutRows{
       display:grid;
       grid-template-columns: var(--side-col-w) 1fr var(--side-col-w);
+      grid-template-rows: auto auto auto;
       gap: var(--gap);
       align-items:start;
     }
+    .layoutRows .frontAxle{ grid-column: 2; grid-row: 1; }
+    .layoutRows .carCell{ grid-column: 2; grid-row: 2; }
+    .layoutRows .rearAxle{ grid-column: 2; grid-row: 3; }
+    .layoutRows .leftCol{ grid-column: 1; grid-row: 2; align-self:center; }
+    .layoutRows .rightCol{ grid-column: 3; grid-row: 2; align-self:center; }
 
-    .center{
-      display:grid;
-      grid-template-rows: auto auto auto;
-      gap: 12px;
-      justify-items:center;
+    .sideStack{
+      transform: translateY(var(--side-y-nudge));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
     }
 
     .carRow{
@@ -147,51 +231,11 @@
       height:auto;
       object-fit:contain;
       display:block;
+      filter:none;
     }
-
-    /* Left + right stacks centered to carRow height */
-    .sideStack{
-      grid-row: 1 / span 1; /* not used here; just semantic */
-      transform: translateY(var(--side-y-nudge));
-      display:flex;
-      flex-direction:column;
-      justify-content:center; /* key: center stacks against car row */
-    }
-
-    /* Put the side stacks aligned with the car image row */
-    .layout .leftCol,
-    .layout .rightCol{
-      display:flex;
-      flex-direction:column;
-    }
-    .layoutGrid{
-      display:grid;
-      grid-template-columns: var(--side-col-w) 1fr var(--side-col-w);
-      gap: var(--gap);
-      align-items:start;
-    }
-    .layoutGrid .center{
-      grid-column: 2;
-    }
-
-    /* We create a 3-row wrapper where left/right only occupy the middle row */
-    .layoutRows{
-      display:grid;
-      grid-template-columns: var(--side-col-w) 1fr var(--side-col-w);
-      grid-template-rows: auto auto auto; /* front axle row, car row, rear axle row */
-      gap: var(--gap);
-      align-items:start;
-    }
-    .layoutRows .frontAxle{ grid-column: 2; grid-row: 1; }
-    .layoutRows .carCell{ grid-column: 2; grid-row: 2; }
-    .layoutRows .rearAxle{ grid-column: 2; grid-row: 3; }
-
-    /* Left/right stacks pinned to row 2 (car row) and centered */
-    .layoutRows .leftCol{ grid-column: 1; grid-row: 2; align-self:center; }
-    .layoutRows .rightCol{ grid-column: 3; grid-row: 2; align-self:center; }
-    .layoutRows .leftCol .sideStack,
-    .layoutRows .rightCol .sideStack{
-      transform: translateY(var(--side-y-nudge));
+    body.dark .carRow img{
+      filter: invert(1) brightness(1.05);
+      opacity: .92;
     }
 
     /* Bottom: Cross + Total side-by-side */
@@ -202,20 +246,56 @@
       margin-top: 6px;
     }
 
+    /* Delta + Target tools */
+    .toolsRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+      margin-top: 10px;
+    }
+    .kvs{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      font-size:13px;
+      align-items:center;
+    }
+    .kvs .k{ color: var(--muted); }
+    .kvs .v{ font-weight:800; text-align:right; }
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .targetLine{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .targetLine input{ max-width: 150px; }
+
+    /* Notes */
     .notes{
       margin-top: 10px;
-      border-top:1px solid #e3e3e3;
+      border-top:1px solid var(--softline);
       padding-top: 10px;
     }
     textarea{
       width:100%;
       min-height: 100px;
-      border:1px solid #bbb;
+      border:1px solid var(--fieldline);
       border-radius:12px;
       padding:10px;
       font-size:15px;
       resize:vertical;
+      background:var(--fieldbg);
+      color:var(--text);
+      box-sizing:border-box;
     }
+
     .toolbar{
       display:flex;
       gap:10px;
@@ -224,38 +304,72 @@
       margin-top: 10px;
     }
     .btn{
-      border:1px solid #111;
-      background:#111;
-      color:#fff;
+      border:1px solid var(--line);
+      background:var(--btnbg);
+      color:var(--btntext);
       padding:10px 12px;
       border-radius:12px;
       font-weight:800;
       cursor:pointer;
     }
     .btn.secondary{
-      background:#fff;
-      color:#111;
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--softline);
     }
 
-    /* Lock UI */
-    .inwrap{ position:relative; width:100%; }
+    /* Lock UI: no overlap + keep input wide */
+    .inwrap{
+      display:grid;
+      grid-template-columns: minmax(150px, 1fr) 22px; /* input takes the width */
+      gap:6px;
+      align-items:center;
+      width:100%;
+      min-width: 0;
+    }
+    .inwrap input{
+      width:100%;
+      min-width:0;
+      padding-right:10px;
+    }
     .lockbtn{
-      position:absolute;
-      right:6px;
-      top:50%;
-      transform:translateY(-50%);
-      border:1px solid #999;
-      background:#fff;
+      width:22px;
+      height:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      border:1px solid var(--fieldline);
+      background:var(--fieldbg);
+      color:var(--text);
       border-radius:10px;
-      font-size:14px;
-      padding:4px 6px;
+      font-size:13px;
       cursor:pointer;
       line-height:1;
+      user-select:none;
     }
-    .inwrap input{ padding-right:42px; }
     .lockedField{
-      border:2px solid #111 !important;
-      background:#f7f7f7 !important;
+      border:2px solid var(--line) !important;
+      background: rgba(0,0,0,.04) !important;
+    }
+    body.dark .lockedField{
+      background: rgba(255,255,255,.06) !important;
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; padding:0; }
+      .page{
+        box-shadow:none;
+        border:none;
+        border-radius:0;
+        padding: 0.3in;
+        width: 8.5in;
+      }
+      .topbar, .toolsRow, .toolbar .secondary, .pill, #conflictBanner { display:none !important; }
+      .btn{ display:none !important; }
+      textarea{ min-height: 70px; }
+      body.dark .carRow img{ filter:none; opacity:1; }
     }
 
     @media (max-width: 900px){
@@ -264,17 +378,19 @@
       .meta2{ grid-template-columns: 1fr; }
       .logo img{ width: 80%; }
 
-      /* On small screens stack everything */
       .layoutRows{
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto auto; /* left, front, car, rear, right */
+        grid-template-rows: auto auto auto auto auto;
       }
       .layoutRows .leftCol{ grid-column:1; grid-row:1; }
       .layoutRows .frontAxle{ grid-column:1; grid-row:2; }
       .layoutRows .carCell{ grid-column:1; grid-row:3; }
       .layoutRows .rearAxle{ grid-column:1; grid-row:4; }
       .layoutRows .rightCol{ grid-column:1; grid-row:5; }
+
       .bottom{ grid-template-columns: 1fr; }
+      .toolsRow{ grid-template-columns: 1fr; }
+      .select{ min-width: 100%; }
     }
   </style>
 </head>
@@ -282,69 +398,81 @@
 <body>
   <div class="page" id="app">
     <div class="logo">
-      <img src="ccc-logo.png" alt="CCC Motorsports" />
+      <img src="./ccc-logo.png" alt="CCC Motorsports">
     </div>
 
     <div class="meta">
-      <div class="field"><label>CAR YEAR:</label><input id="car_year" type="text" /></div>
-      <div class="field"><label>MAKE:</label><input id="make" type="text" /></div>
-      <div class="field"><label>MODEL:</label><input id="model" type="text" /></div>
+      <div class="field"><label>CAR YEAR:</label><input id="car_year" type="text"></div>
+      <div class="field"><label>MAKE:</label><input id="make" type="text"></div>
+      <div class="field"><label>MODEL:</label><input id="model" type="text"></div>
     </div>
 
     <div class="meta2">
-      <div class="field"><label>OWNER:</label><input id="owner" type="text" /></div>
-      <div class="field"><label>DATE:</label><input id="date" type="text" placeholder="__/__/____" /></div>
+      <div class="field"><label>OWNER:</label><input id="owner" type="text"></div>
+      <div class="field"><label>DATE:</label><input id="date" type="text" placeholder="__/__/____"></div>
     </div>
 
-    <!-- CAD-like alignment: left/right stacks centered to car row -->
+    <div class="topbar">
+      <div class="group">
+        <select id="savedSelect" class="select">
+          <option value="">Load saved setup…</option>
+        </select>
+        <button class="btn secondary" id="saveBtn" type="button">Save</button>
+        <button class="btn secondary" id="newBtn" type="button">New setup</button>
+      </div>
+      <div class="group">
+        <button class="pill" id="autosaveToggle" type="button" aria-pressed="true">Autosave: ON</button>
+        <button class="pill" id="darkToggle" type="button" aria-pressed="false">Dark: OFF</button>
+      </div>
+    </div>
+
+    <div id="conflictBanner">Conflicting locked inputs — fix the red fields or unlock one.</div>
+
     <div class="layoutRows">
 
-      <!-- FRONT AXLE (row 1, center) -->
       <div class="block frontAxle">
         <h3>FRONT AXLE</h3>
         <div class="rows">
           <div class="rowlbl">Before</div>
-          <input data-k="FRONT_before_lbs" type="number" step="0.1" inputmode="decimal" />
-          <input data-k="FRONT_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+          <div class="inwrap"><input data-k="FRONT_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+          <input data-k="FRONT_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
           <div class="unit">%</div>
 
           <div class="rowlbl">After</div>
-          <input data-k="FRONT_after_lbs" type="number" step="0.1" inputmode="decimal" />
-          <input data-k="FRONT_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+          <div class="inwrap"><input data-k="FRONT_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+          <input data-k="FRONT_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
           <div class="unit">%</div>
         </div>
       </div>
 
-      <!-- LEFT STACK (row 2, left) -->
       <div class="leftCol">
         <div class="sideStack">
           <div class="block">
             <h3>LF – LEFT FRONT</h3>
             <div class="rows">
               <div class="rowlbl">Before</div>
-              <input data-k="LF_before_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="LF_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="LF_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="LF_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
 
               <div class="rowlbl">After</div>
-              <input data-k="LF_after_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="LF_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="LF_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="LF_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
             </div>
-            <div class="small">lbs entered; % auto</div>
           </div>
 
           <div class="block">
             <h3>LEFT SIDE</h3>
             <div class="rows">
               <div class="rowlbl">Before</div>
-              <input data-k="LEFT_before_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="LEFT_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="LEFT_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="LEFT_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
 
               <div class="rowlbl">After</div>
-              <input data-k="LEFT_after_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="LEFT_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="LEFT_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="LEFT_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
             </div>
           </div>
@@ -353,38 +481,38 @@
             <h3>LR – LEFT REAR</h3>
             <div class="rows">
               <div class="rowlbl">Before</div>
-              <input data-k="LR_before_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="LR_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="LR_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="LR_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
 
               <div class="rowlbl">After</div>
-              <input data-k="LR_after_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="LR_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="LR_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="LR_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- CAR IMAGE (row 2, center) -->
-      <div class="carCell carRow">
-        <img src="mustang-top.png" alt="1967 Mustang top view" />
+      <div class="carCell">
+        <div class="carRow">
+          <img src="./mustang-top.png" alt="1967 Mustang top view">
+        </div>
       </div>
 
-      <!-- RIGHT STACK (row 2, right) -->
       <div class="rightCol">
         <div class="sideStack">
           <div class="block">
             <h3>RF – RIGHT FRONT</h3>
             <div class="rows">
               <div class="rowlbl">Before</div>
-              <input data-k="RF_before_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="RF_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="RF_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="RF_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
 
               <div class="rowlbl">After</div>
-              <input data-k="RF_after_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="RF_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="RF_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="RF_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
             </div>
           </div>
@@ -393,13 +521,13 @@
             <h3>RIGHT SIDE</h3>
             <div class="rows">
               <div class="rowlbl">Before</div>
-              <input data-k="RIGHT_before_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="RIGHT_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="RIGHT_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="RIGHT_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
 
               <div class="rowlbl">After</div>
-              <input data-k="RIGHT_after_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="RIGHT_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="RIGHT_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="RIGHT_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
             </div>
           </div>
@@ -408,31 +536,30 @@
             <h3>RR – RIGHT REAR</h3>
             <div class="rows">
               <div class="rowlbl">Before</div>
-              <input data-k="RR_before_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="RR_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="RR_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="RR_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
 
               <div class="rowlbl">After</div>
-              <input data-k="RR_after_lbs" type="number" step="0.1" inputmode="decimal" />
-              <input data-k="RR_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+              <div class="inwrap"><input data-k="RR_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+              <input data-k="RR_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
               <div class="unit">%</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- REAR AXLE (row 3, center) -->
       <div class="block rearAxle">
         <h3>REAR AXLE</h3>
         <div class="rows">
           <div class="rowlbl">Before</div>
-          <input data-k="REAR_before_lbs" type="number" step="0.1" inputmode="decimal" />
-          <input data-k="REAR_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+          <div class="inwrap"><input data-k="REAR_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+          <input data-k="REAR_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
           <div class="unit">%</div>
 
           <div class="rowlbl">After</div>
-          <input data-k="REAR_after_lbs" type="number" step="0.1" inputmode="decimal" />
-          <input data-k="REAR_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+          <div class="inwrap"><input data-k="REAR_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+          <input data-k="REAR_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
           <div class="unit">%</div>
         </div>
       </div>
@@ -441,32 +568,59 @@
 
     <div class="bottom">
       <div class="block">
-        <h3>CROSS WEIGHT (LF + RR)</h3>
+        <h3>CROSS WEIGHT / DIAGONAL (LF + RR)</h3>
         <div class="rows">
           <div class="rowlbl">Before</div>
-          <input data-k="CROSS_before_lbs" type="number" step="0.1" inputmode="decimal" />
-          <input data-k="CROSS_before_pct" type="number" step="0.1" inputmode="decimal" disabled />
+          <div class="inwrap"><input data-k="CROSS_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+          <input data-k="CROSS_before_pct" type="number" step="0.1" inputmode="decimal" disabled>
           <div class="unit">%</div>
 
           <div class="rowlbl">After</div>
-          <input data-k="CROSS_after_lbs" type="number" step="0.1" inputmode="decimal" />
-          <input data-k="CROSS_after_pct" type="number" step="0.1" inputmode="decimal" disabled />
+          <div class="inwrap"><input data-k="CROSS_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
+          <input data-k="CROSS_after_pct" type="number" step="0.1" inputmode="decimal" disabled>
           <div class="unit">%</div>
         </div>
       </div>
 
       <div class="block">
         <h3>TOTAL VEHICLE WEIGHT</h3>
-        <div class="rows" style="grid-template-columns:72px 1fr 1fr 42px;">
+        <div class="rows" style="grid-template-columns:72px 1.65fr 1fr 42px;">
           <div class="rowlbl">Before</div>
-          <input data-k="TOTAL_before_lbs" type="number" step="0.1" inputmode="decimal" />
+          <div class="inwrap"><input data-k="TOTAL_before_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
           <div></div>
           <div class="unit">lbs</div>
 
           <div class="rowlbl">After</div>
-          <input data-k="TOTAL_after_lbs" type="number" step="0.1" inputmode="decimal" />
+          <div class="inwrap"><input data-k="TOTAL_after_lbs" type="number" step="0.1" inputmode="decimal"><button type="button" class="lockbtn">🔓</button></div>
           <div></div>
           <div class="unit">lbs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolsRow">
+      <div class="block">
+        <h3>DELTA (After − Before)</h3>
+        <div class="kvs" id="deltaPanel"></div>
+        <div class="hint">This is a quick “what changed” snapshot for setup adjustments.</div>
+      </div>
+
+      <div class="block">
+        <h3>TARGET CROSS %</h3>
+        <div class="targetLine">
+          <label style="font-weight:800;">Target:</label>
+          <input id="targetCross" type="number" step="0.1" inputmode="decimal" placeholder="50.0">
+          <span style="font-weight:800;">%</span>
+          <button class="btn secondary" id="applyTargetBtn" type="button">Set 50.0</button>
+        </div>
+        <div class="kvs" style="margin-top:10px;">
+          <div class="k">Current Cross (After)</div><div class="v" id="curCrossAfter">—</div>
+          <div class="k">Target Cross lbs (After)</div><div class="v" id="targetCrossLbsAfter">—</div>
+          <div class="k">You are off by</div><div class="v" id="crossDeltaAfter">—</div>
+        </div>
+        <div class="hint">
+          If Cross is <b>high</b>, you’re heavy on <b>LF+RR</b> diagonal. If Cross is <b>low</b>, heavy on <b>RF+LR</b>.
+          Lock values you trust; red fields mean the locked numbers contradict each other.
         </div>
       </div>
     </div>
@@ -478,192 +632,146 @@
       <div class="toolbar">
         <button class="btn secondary" id="clearBtn" type="button">Clear all weights</button>
         <button class="btn secondary" id="unlockAllBtn" type="button">Unlock all</button>
-        <button class="btn" id="printBtn" type="button">Print</button>
+        <button class="btn" id="printBtn" type="button">Print / Save PDF</button>
       </div>
     </div>
   </div>
 
 <script>
+(() => {
   const inputs = [...document.querySelectorAll('input[data-k]')];
   const map = new Map(inputs.map(i => [i.dataset.k, i]));
-  function num(v){
-    if(v===null||v===undefined) return null;
-    const s=String(v).trim();
-    if(!s) return null;
-    const f=parseFloat(s);
-    return Number.isFinite(f)?f:null;
-  }
-  function getKey(k){ return num(map.get(k)?.value); }
-  const fmtLbs=(x)=>(Math.round(x*10)/10).toFixed(1);
-  const fmtPct=(x)=>(Math.round(x*10)/10).toFixed(1);
+  const banner = document.getElementById("conflictBanner");
 
-  // locks
+  const meta = {
+    year: document.getElementById('car_year'),
+    make: document.getElementById('make'),
+    model: document.getElementById('model'),
+    owner: document.getElementById('owner'),
+    date: document.getElementById('date'),
+    notes: document.getElementById('notes')
+  };
+
   const locked = new Set();
 
-  // conflict banner
-  function ensureBanner(){
-    let b = document.getElementById("conflictBanner");
-    if(b) return b;
-    b = document.createElement("div");
-    b.id = "conflictBanner";
-    b.style.cssText = `
-      display:none;
-      margin: 10px 0 14px;
-      padding: 10px 12px;
-      border: 2px solid #b00020;
-      background: #ffe9ee;
-      border-radius: 12px;
-      font-weight: 800;
-    `;
-    b.textContent = "Conflicting locked inputs — fix the red fields or unlock one.";
-    const app = document.getElementById("app");
-    app.insertBefore(b, app.children[3]);
-    return b;
+  function num(v){
+    if(v === "" || v == null) return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
   }
-  const banner = ensureBanner();
-
-  function markConflict(k, isBad){
-    const el = map.get(k);
+  function fmtLbs(n){
+    const s = (Math.round(n*10)/10).toFixed(1);
+    return s.endsWith(".0") ? s.slice(0,-2) : s;
+  }
+  function fmtPct(n){ return (Math.round(n*10)/10).toFixed(1); }
+  function isLocked(key){ return locked.has(key); }  function setVal(key, value, {auto=false}={}){
+    const el = map.get(key);
     if(!el) return;
-    if(isBad){
-      el.style.border = "2px solid #b00020";
-      el.style.background = "#ffe9ee";
-      el.dataset.conflict = "1";
-    }else{
-      el.style.border = "";
-      el.style.background = "";
-      el.dataset.conflict = "0";
-    }
-  }
-  function clearAllConflicts(){
-    for(const [k] of map){
-      if(k.endsWith("_lbs")) markConflict(k,false);
-    }
-    banner.style.display="none";
-  }
-  function showBannerIfNeeded(){
-    for(const [,el] of map){
-      if(el.dataset.conflict==="1"){ banner.style.display="block"; return; }
-    }
-    banner.style.display="none";
+    if(isLocked(key)) return;
+
+    // Preserve user-entered values. Only overwrite if:
+    // - field is empty, OR
+    // - field was previously auto-derived (dataset.auto === "1")
+    const prev = el.value;
+    const wasAuto = el.dataset.auto === "1";
+    if(auto && prev !== "" && !wasAuto) return;
+
+    el.value = (value==null) ? "" : fmtLbs(value);
+    el.dataset.auto = auto ? "1" : "0";
   }
 
-  // inject lock buttons for lbs fields
-  function injectLocks(){
-    for(const el of inputs){
-      const k = el.dataset.k;
-      if(!k || !k.endsWith("_lbs")) continue;
-
-      const wrap = document.createElement("div");
-      wrap.className = "inwrap";
-      el.parentNode.insertBefore(wrap, el);
-      wrap.appendChild(el);
-
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "lockbtn";
-      btn.textContent = "🔓";
-      btn.title = "Lock/unlock this field";
-      wrap.appendChild(btn);
-
-      btn.addEventListener("click", ()=>{
-        if(locked.has(k)){
-          locked.delete(k);
-          btn.textContent="🔓";
-          el.classList.remove("lockedField");
-        }else{
-          locked.add(k);
-          btn.textContent="🔒";
-          el.classList.add("lockedField");
-        }
-        scheduleRecalc();
-      });
-    }
-  }
-  injectLocks();
-
-  function setAuto(k, v, fmt){
-    const el = map.get(k);
-    if(!el) return;
-    if(v===null||v===undefined||!Number.isFinite(v)) return;
-    if(locked.has(k)) return;
-    if(document.activeElement===el) return;
-
-    const cur=String(el.value??'').trim();
-    const isAuto=el.dataset.auto==="1";
-    if(cur==="" || isAuto){
-      el.value=fmt(v);
-      el.dataset.auto="1";
-    }
-  }
-
-  function safeDerive(prefix){
-    const k=(name)=>`${name}_${prefix}_lbs`;
-
-    const LF=getKey(k("LF")), RF=getKey(k("RF")), LR=getKey(k("LR")), RR=getKey(k("RR"));
-    const FRONT=getKey(k("FRONT")), REAR=getKey(k("REAR")), LEFT=getKey(k("LEFT")), RIGHT=getKey(k("RIGHT"));
-    const CROSS=getKey(k("CROSS")), TOTAL=getKey(k("TOTAL"));
-
-    if(LF!=null && RF!=null) setAuto(k("FRONT"), LF+RF, fmtLbs);
-    if(LR!=null && RR!=null) setAuto(k("REAR"),  LR+RR, fmtLbs);
-    if(LF!=null && LR!=null) setAuto(k("LEFT"),  LF+LR, fmtLbs);
-    if(RF!=null && RR!=null) setAuto(k("RIGHT"), RF+RR, fmtLbs);
-    if(LF!=null && RR!=null) setAuto(k("CROSS"), LF+RR, fmtLbs);
-    if(LF!=null && RF!=null && LR!=null && RR!=null) setAuto(k("TOTAL"), LF+RF+LR+RR, fmtLbs);
-
-    const FRONT2=getKey(k("FRONT")), REAR2=getKey(k("REAR")), TOTAL2=getKey(k("TOTAL"));
-    if(TOTAL2!=null && FRONT2!=null) setAuto(k("REAR"), TOTAL2-FRONT2, fmtLbs);
-    if(TOTAL2!=null && REAR2!=null)  setAuto(k("FRONT"), TOTAL2-REAR2, fmtLbs);
-    if(FRONT2!=null && REAR2!=null)  setAuto(k("TOTAL"), FRONT2+REAR2, fmtLbs);
-
-    const LEFT2=getKey(k("LEFT")), RIGHT2=getKey(k("RIGHT")), TOTAL3=getKey(k("TOTAL"));
-    if(TOTAL3!=null && LEFT2!=null)  setAuto(k("RIGHT"), TOTAL3-LEFT2, fmtLbs);
-    if(TOTAL3!=null && RIGHT2!=null) setAuto(k("LEFT"),  TOTAL3-RIGHT2, fmtLbs);
-    if(LEFT2!=null && RIGHT2!=null)  setAuto(k("TOTAL"), LEFT2+RIGHT2, fmtLbs);
-
-    const LF2=getKey(k("LF")), RF2=getKey(k("RF")), LR2=getKey(k("LR")), RR2=getKey(k("RR"));
-    const FRONT3=getKey(k("FRONT")), REAR3=getKey(k("REAR")), LEFT3=getKey(k("LEFT")), RIGHT3=getKey(k("RIGHT")), CROSS3=getKey(k("CROSS"));
-
-    if(FRONT3!=null && LF2!=null) setAuto(k("RF"), FRONT3-LF2, fmtLbs);
-    if(FRONT3!=null && RF2!=null) setAuto(k("LF"), FRONT3-RF2, fmtLbs);
-
-    if(REAR3!=null && LR2!=null) setAuto(k("RR"), REAR3-LR2, fmtLbs);
-    if(REAR3!=null && RR2!=null) setAuto(k("LR"), REAR3-RR2, fmtLbs);
-
-    if(LEFT3!=null && LF2!=null) setAuto(k("LR"), LEFT3-LF2, fmtLbs);
-    if(LEFT3!=null && LR2!=null) setAuto(k("LF"), LEFT3-LR2, fmtLbs);
-
-    if(RIGHT3!=null && RF2!=null) setAuto(k("RR"), RIGHT3-RF2, fmtLbs);
-    if(RIGHT3!=null && RR2!=null) setAuto(k("RF"), RIGHT3-RR2, fmtLbs);
-
-    if(CROSS3!=null && LF2!=null) setAuto(k("RR"), CROSS3-LF2, fmtLbs);
-    if(CROSS3!=null && RR2!=null) setAuto(k("LF"), CROSS3-RR2, fmtLbs);
-
-    if(TOTAL2!=null){
-      if(LF2!=null && RF2!=null && LR2!=null) setAuto(k("RR"), TOTAL2-LF2-RF2-LR2, fmtLbs);
-      if(LF2!=null && RF2!=null && RR2!=null) setAuto(k("LR"), TOTAL2-LF2-RF2-RR2, fmtLbs);
-      if(LF2!=null && LR2!=null && RR2!=null) setAuto(k("RF"), TOTAL2-LF2-LR2-RR2, fmtLbs);
-      if(RF2!=null && LR2!=null && RR2!=null) setAuto(k("LF"), TOTAL2-RF2-LR2-RR2, fmtLbs);
-    }
-  }
-
-  function fillPct(prefix){
-    const total=getKey(`TOTAL_${prefix}_lbs`);
-    if(total==null || Math.abs(total)<1e-9) return;
-    const bases=["LF","RF","LR","RR","FRONT","REAR","LEFT","RIGHT","CROSS"];
-    for(const b of bases){
-      const v=getKey(`${b}_${prefix}_lbs`);
-      if(v==null) continue;
-      setAuto(`${b}_${prefix}_pct`, (v/total)*100, fmtPct);
-    }
+  function getKey(key){
+    const el = map.get(key);
+    if(!el) return null;
+    return num(el.value);
   }
 
   function approxEq(a,b){ return Math.abs(a-b) <= 0.2; }
 
-  function checkConflicts(prefix){
-    const K=(name)=>`${name}_${prefix}_lbs`;
-    const v=(name)=>getKey(K(name));
+  function clearAllConflicts(){
+    for(const el of inputs){
+      el.dataset.conflict = "0";
+      if(el.dataset.k?.endsWith('_lbs')){
+        el.style.border = "";
+        el.style.background = "";
+      }
+    }
+  }
+  function markConflict(key, on){
+    const el = map.get(key);
+    if(!el) return;
+    if(on){
+      el.style.border = "2px solid var(--danger)";
+      el.style.background = "var(--dangerbg)";
+    } else {
+      el.style.border = "";
+      el.style.background = "";
+    }
+  }
 
+  function K(name, prefix){ return `${name}_${prefix}_lbs`; }
+
+  function derive(prefix){
+    const v = (name)=>getKey(K(name,prefix));
+    let LF=v("LF"), RF=v("RF"), LR=v("LR"), RR=v("RR");
+    let FRONT=v("FRONT"), REAR=v("REAR"), LEFT=v("LEFT"), RIGHT=v("RIGHT"), CROSS=v("CROSS"), TOTAL=v("TOTAL");
+    const S = (name, val)=>setVal(K(name,prefix), val, {auto:true});
+
+    if(FRONT==null && LF!=null && RF!=null) S("FRONT", LF+RF);
+    if(REAR==null  && LR!=null && RR!=null) S("REAR",  LR+RR);
+    if(LEFT==null  && LF!=null && LR!=null) S("LEFT",  LF+LR);
+    if(RIGHT==null && RF!=null && RR!=null) S("RIGHT", RF+RR);
+    if(CROSS==null && LF!=null && RR!=null) S("CROSS", LF+RR);
+    if(TOTAL==null && LF!=null && RF!=null && LR!=null && RR!=null) S("TOTAL", LF+RF+LR+RR);
+
+    LF=v("LF"); RF=v("RF"); LR=v("LR"); RR=v("RR");
+    FRONT=v("FRONT"); REAR=v("REAR"); LEFT=v("LEFT"); RIGHT=v("RIGHT"); CROSS=v("CROSS"); TOTAL=v("TOTAL");
+
+    if(LF==null && FRONT!=null && RF!=null) S("LF", FRONT-RF);
+    if(RF==null && FRONT!=null && LF!=null) S("RF", FRONT-LF);
+
+    if(LR==null && REAR!=null && RR!=null) S("LR", REAR-RR);
+    if(RR==null && REAR!=null && LR!=null) S("RR", REAR-LR);
+
+    if(LF==null && LEFT!=null && LR!=null) S("LF", LEFT-LR);
+    if(LR==null && LEFT!=null && LF!=null) S("LR", LEFT-LF);
+
+    if(RF==null && RIGHT!=null && RR!=null) S("RF", RIGHT-RR);
+    if(RR==null && RIGHT!=null && RF!=null) S("RR", RIGHT-RF);
+
+    if(LF==null && CROSS!=null && RR!=null) S("LF", CROSS-RR);
+    if(RR==null && CROSS!=null && LF!=null) S("RR", CROSS-LF);
+
+    if(LF==null && TOTAL!=null && RF!=null && LR!=null && RR!=null) S("LF", TOTAL-RF-LR-RR);
+    if(RF==null && TOTAL!=null && LF!=null && LR!=null && RR!=null) S("RF", TOTAL-LF-LR-RR);
+    if(LR==null && TOTAL!=null && LF!=null && RF!=null && RR!=null) S("LR", TOTAL-LF-RF-RR);
+    if(RR==null && TOTAL!=null && LF!=null && RF!=null && LR!=null) S("RR", TOTAL-LF-RF-LR);
+
+    FRONT=v("FRONT"); REAR=v("REAR"); LEFT=v("LEFT"); RIGHT=v("RIGHT"); CROSS=v("CROSS");
+    if(TOTAL==null && FRONT!=null && REAR!=null) S("TOTAL", FRONT+REAR);
+    if(TOTAL==null && LEFT!=null && RIGHT!=null) S("TOTAL", LEFT+RIGHT);
+    if(TOTAL==null && CROSS!=null && RF!=null && LR!=null) S("TOTAL", CROSS + RF + LR);
+
+    TOTAL=v("TOTAL");
+    if(FRONT==null && TOTAL!=null && REAR!=null) S("FRONT", TOTAL-REAR);
+    if(REAR==null  && TOTAL!=null && FRONT!=null) S("REAR",  TOTAL-FRONT);
+    if(LEFT==null  && TOTAL!=null && RIGHT!=null) S("LEFT",  TOTAL-RIGHT);
+    if(RIGHT==null && TOTAL!=null && LEFT!=null) S("RIGHT", TOTAL-LEFT);
+  }
+
+  function fillPct(prefix){
+    const total = getKey(`TOTAL_${prefix}_lbs`);
+    const pctFor = (lbs)=> (total==null || lbs==null || total===0) ? null : (lbs/total)*100;
+    for(const name of ["LF","RF","LR","RR","FRONT","REAR","LEFT","RIGHT","CROSS"]){
+      const lbs = getKey(`${name}_${prefix}_lbs`);
+      const pct = pctFor(lbs);
+      const el = map.get(`${name}_${prefix}_pct`);
+      if(el) el.value = (pct==null) ? "" : fmtPct(pct);
+    }
+  }
+
+  function checkConflicts(prefix){
+    const v=(name)=>getKey(`${name}_${prefix}_lbs`);
     const LF=v("LF"), RF=v("RF"), LR=v("LR"), RR=v("RR");
     const FRONT=v("FRONT"), REAR=v("REAR"), LEFT=v("LEFT"), RIGHT=v("RIGHT"), CROSS=v("CROSS"), TOTAL=v("TOTAL");
 
@@ -678,14 +786,11 @@
 
     let anyBad=false;
     for(const [name, actual, expected] of checks){
-      const key=K(name);
-      if(!locked.has(key)) continue;
+      const key = `${name}_${prefix}_lbs`;
+      if(!isLocked(key)) continue;
       if(actual==null || expected==null) continue;
-      if(!approxEq(actual, expected)){
-        markConflict(key,true); anyBad=true;
-      }else{
-        markConflict(key,false);
-      }
+      if(!approxEq(actual, expected)){ markConflict(key,true); anyBad=true; }
+      else markConflict(key,false);
     }
 
     const cornerChecks=[
@@ -695,21 +800,85 @@
       ["RR", RR, (REAR!=null&&LR!=null)? REAR-LR : (RIGHT!=null&&RF!=null)? RIGHT-RF : (CROSS!=null&&LF!=null)? CROSS-LF : null],
     ];
     for(const [name, actual, expected] of cornerChecks){
-      const key=K(name);
-      if(!locked.has(key)) continue;
+      const key = `${name}_${prefix}_lbs`;
+      if(!isLocked(key)) continue;
       if(actual==null || expected==null) continue;
-      if(!approxEq(actual, expected)){
-        markConflict(key,true); anyBad=true;
-      }else{
-        markConflict(key,false);
-      }
+      if(!approxEq(actual, expected)){ markConflict(key,true); anyBad=true; }
+      else markConflict(key,false);
     }
 
     banner.style.display = anyBad ? "block" : "none";
   }
 
+  const deltaPanel = document.getElementById('deltaPanel');
+  const targetCross = document.getElementById('targetCross');
+  const curCrossAfter = document.getElementById('curCrossAfter');
+  const targetCrossLbsAfter = document.getElementById('targetCrossLbsAfter');
+  const crossDeltaAfter = document.getElementById('crossDeltaAfter');
+
+  const deltaKeys = [
+    ["LF", "LF"], ["RF","RF"], ["LR","LR"], ["RR","RR"],
+    ["Front","FRONT"], ["Rear","REAR"],
+    ["Left","LEFT"], ["Right","RIGHT"],
+    ["Cross","CROSS"], ["Total","TOTAL"],
+  ];
+
+  function renderDelta(){
+    const rows = [];
+    for(const [label, key] of deltaKeys){
+      const bL = getKey(`${key}_before_lbs`);
+      const aL = getKey(`${key}_after_lbs`);
+      const bP = num(map.get(`${key}_before_pct`)?.value);
+      const aP = num(map.get(`${key}_after_pct`)?.value);
+
+      const dL = (aL!=null && bL!=null) ? (aL - bL) : null;
+      const dP = (aP!=null && bP!=null) ? (aP - bP) : null;
+
+      const lbsTxt = dL==null ? "—" : `${dL>=0?"+":""}${fmtLbs(dL)} lbs`;
+      const pctTxt = dP==null ? "" : ` (${dP>=0?"+":""}${fmtPct(dP)}%)`;
+
+      rows.push({k: label, v: lbsTxt + pctTxt});
+    }
+    deltaPanel.innerHTML = rows.map(r =>
+      `<div class="k">${r.k}</div><div class="v">${r.v}</div>`
+    ).join("");
+  }
+
+  function renderTargetCross(){
+    const totalA = getKey(`TOTAL_after_lbs`);
+    const crossA = getKey(`CROSS_after_lbs`);
+    const crossPctA = num(map.get(`CROSS_after_pct`)?.value);
+    curCrossAfter.textContent = (crossPctA==null) ? "—" : `${fmtPct(crossPctA)}%`;
+
+    const targetPct = num(targetCross.value);
+    if(totalA==null || targetPct==null){
+      targetCrossLbsAfter.textContent = "—";
+      crossDeltaAfter.textContent = "—";
+      return;
+    }
+    const targetLbs = totalA * (targetPct/100);
+    targetCrossLbsAfter.textContent = `${fmtLbs(targetLbs)} lbs`;
+
+    if(crossA==null){ crossDeltaAfter.textContent = "—"; return; }
+    const off = crossA - targetLbs;
+    crossDeltaAfter.textContent = `${off>=0?"+":""}${fmtLbs(off)} lbs`;
+  }
+
   function recalc(prefix){
-    for(let i=0;i<6;i++) safeDerive(prefix);
+    // Clear previously auto-derived lbs values so they can be recomputed from the current user inputs.
+    // User-entered values (dataset.auto !== "1") stay in place unless locked conflicts are detected.
+    for(const [k, el] of map){
+      if(!k.endsWith(`_${prefix}_lbs`)) continue;
+      if(isLocked(k)) continue;
+      if(el.dataset.auto === "1"){
+        el.value = "";
+        el.dataset.auto = "0";
+      }
+    }
+
+    // Solve by repeatedly applying derivation rules until no more fields can be filled.
+    for(let i=0;i<12;i++) derive(prefix);
+
     fillPct(prefix);
     checkConflicts(prefix);
   }
@@ -718,51 +887,225 @@
     clearAllConflicts();
     recalc('before');
     recalc('after');
-    showBannerIfNeeded();
+    renderDelta();
+    renderTargetCross();
   }
 
   let t=null;
-  function scheduleRecalc(){
-    clearTimeout(t);
-    t=setTimeout(recalcAll, 250);
+  function scheduleRecalc(){ clearTimeout(t); t=setTimeout(recalcAll, 200); }
+
+  const AUTOSAVE_KEY = "ccc_autosave_enabled_v1";
+  const SAVE_PREFIX = "ccc_setup_v1_";
+  const SAVE_INDEX_KEY = "ccc_setup_index_v1";
+  let autosaveEnabled = (localStorage.getItem(AUTOSAVE_KEY) ?? "1") === "1";
+
+  function snapshot(){
+    const fields = {};
+    for(const [k, el] of map){
+      if(el.disabled) continue;
+      const v = el.value;
+      if(v !== "") fields[k] = v;
+    }
+    return {
+      meta: {
+        car_year: meta.year.value, make: meta.make.value, model: meta.model.value,
+        owner: meta.owner.value, date: meta.date.value, notes: meta.notes.value,
+        dark: document.body.classList.contains("dark") ? 1 : 0
+      },
+      fields,
+      locks: [...locked]
+    };
   }
 
-  for(const el of inputs){
-    const k=el.dataset.k;
-    if(!k || !k.endsWith('_lbs')) continue;
-    el.addEventListener('input', ()=>{
-      el.dataset.auto="0";
-      scheduleRecalc();
-    });
+  function applySnapshot(data){
+    if(data.meta){
+      meta.year.value = data.meta.car_year ?? "";
+      meta.make.value = data.meta.make ?? "";
+      meta.model.value = data.meta.model ?? "";
+      meta.owner.value = data.meta.owner ?? "";
+      meta.date.value = data.meta.date ?? "";
+      meta.notes.value = data.meta.notes ?? "";
+      document.body.classList.toggle("dark", !!data.meta.dark);
+      updateDarkToggle();
+    }
+
+    for(const [k, el] of map){
+      if(k.endsWith('_lbs')){ el.value=""; el.dataset.auto="0"; }
+      markConflict(k,false);
+    }
+
+    if(data.fields){
+      for(const [k, v] of Object.entries(data.fields)){
+        const el = map.get(k);
+        if(el) { el.value = v; el.dataset.auto="0"; }
+      }
+    }
+
+    locked.clear();
+    document.querySelectorAll('.lockbtn').forEach(btn => btn.textContent="🔓");
+    document.querySelectorAll('input[data-k$="_lbs"]').forEach(inp=>inp.classList.remove("lockedField"));
+    if(Array.isArray(data.locks)){
+      for(const k of data.locks){
+        if(map.has(k)){
+          locked.add(k);
+          const el = map.get(k);
+          el.classList.add("lockedField");
+          const btn = el.parentElement?.querySelector?.(".lockbtn");
+          if(btn) btn.textContent="🔒";
+        }
+      }
+    }
+    recalcAll();
   }
+
+  function getIndex(){ try{ return JSON.parse(localStorage.getItem(SAVE_INDEX_KEY) || "[]"); }catch{ return []; } }
+  function setIndex(arr){ localStorage.setItem(SAVE_INDEX_KEY, JSON.stringify(arr)); }
+
+  function titleForSnapshot(snap){
+    const y = snap?.meta?.car_year?.trim() || "";
+    const mk = snap?.meta?.make?.trim() || "";
+    const md = snap?.meta?.model?.trim() || "";
+    const ow = snap?.meta?.owner?.trim() || "";
+    const dt = snap?.meta?.date?.trim() || "";
+    const base = [y, mk, md].filter(Boolean).join(" ");
+    const tail = [ow ? `• ${ow}` : "", dt ? `• ${dt}` : ""].filter(Boolean).join(" ");
+    return (base || "Untitled") + (tail ? ` ${tail}` : "");
+  }
+
+  function saveSetup(id=null){
+    const snap = snapshot();
+    const setupId = id || `${Date.now()}`;
+    localStorage.setItem(SAVE_PREFIX + setupId, JSON.stringify(snap));
+    if(setupId !== "__autosave__"){
+      const idx = getIndex();
+      if(!idx.includes(setupId)){ idx.unshift(setupId); setIndex(idx.slice(0, 50)); }
+    }
+    return setupId;
+  }
+  function loadSetup(id){
+    try{
+      const raw = localStorage.getItem(SAVE_PREFIX + id);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch{ return null; }
+  }
+
+  const savedSelect = document.getElementById('savedSelect');
+  function refreshSavedList(){
+    const idx = getIndex();
+    const opts = ['<option value="">Load saved setup…</option>'];
+    const auto = loadSetup("__autosave__");
+    if(auto) opts.push(`<option value="__autosave__">🟦 Autosave — ${titleForSnapshot(auto)}</option>`);
+    for(const id of idx){
+      const snap = loadSetup(id);
+      if(!snap) continue;
+      opts.push(`<option value="${id}">📌 ${titleForSnapshot(snap)}</option>`);
+    }
+    savedSelect.innerHTML = opts.join("");
+  }
+
+  function scheduleAutosave(){
+    if(!autosaveEnabled) return;
+    clearTimeout(scheduleAutosave._t);
+    scheduleAutosave._t = setTimeout(()=>{ saveSetup("__autosave__"); refreshSavedList(); }, 500);
+  }
+
+  const autosaveToggle = document.getElementById('autosaveToggle');
+  function updateAutosaveToggle(){
+    autosaveToggle.textContent = `Autosave: ${autosaveEnabled ? "ON" : "OFF"}`;
+    autosaveToggle.setAttribute("aria-pressed", autosaveEnabled ? "true" : "false");
+  }
+  updateAutosaveToggle();
+  autosaveToggle.addEventListener('click', ()=>{
+    autosaveEnabled = !autosaveEnabled;
+    localStorage.setItem(AUTOSAVE_KEY, autosaveEnabled ? "1" : "0");
+    updateAutosaveToggle();
+    if(autosaveEnabled) scheduleAutosave();
+  });
+
+  const darkToggle = document.getElementById('darkToggle');
+  function updateDarkToggle(){
+    const on = document.body.classList.contains("dark");
+    darkToggle.textContent = `Dark: ${on ? "ON" : "OFF"}`;
+    darkToggle.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+  updateDarkToggle();
+  darkToggle.addEventListener('click', ()=>{ document.body.classList.toggle("dark"); updateDarkToggle(); scheduleAutosave(); });
+
+  document.getElementById('saveBtn').addEventListener('click', ()=>{ saveSetup(null); refreshSavedList(); alert("Saved."); });
+  savedSelect.addEventListener('change', ()=>{
+    const id = savedSelect.value;
+    if(!id) return;
+    const snap = loadSetup(id);
+    if(!snap){ alert("Could not load that setup."); return; }
+    applySnapshot(snap);
+    savedSelect.value = "";
+  });
+
+  document.getElementById('newBtn').addEventListener('click', ()=>{
+    for(const [k, el] of map){
+      if(k.endsWith('_lbs')) el.value='';
+      el.dataset.auto="0";
+      el.style.border=""; el.style.background="";
+      el.classList.remove("lockedField");
+    }
+    meta.notes.value = "";
+    locked.clear();
+    banner.style.display="none";
+    document.querySelectorAll('.lockbtn').forEach(btn => btn.textContent="🔓");
+    recalcAll(); scheduleAutosave();
+  });
+
+  document.getElementById('applyTargetBtn').addEventListener('click', ()=>{ targetCross.value="50.0"; renderTargetCross(); scheduleAutosave(); });
+  targetCross.addEventListener('input', ()=>{ renderTargetCross(); scheduleAutosave(); });
+
+  document.querySelectorAll('.inwrap').forEach(wrap=>{
+    const input = wrap.querySelector('input[type="number"]');
+    const btn = wrap.querySelector('.lockbtn');
+    if(!input || !btn) return;
+    const key = input.dataset.k;
+    if(!key.endsWith('_lbs')){ btn.style.display="none"; return; }
+
+    btn.addEventListener('click', ()=>{
+      const nowLocked = !locked.has(key);
+      if(nowLocked) locked.add(key); else locked.delete(key);
+      input.classList.toggle("lockedField", nowLocked);
+      btn.textContent = nowLocked ? "🔒" : "🔓";
+      recalcAll(); scheduleAutosave();
+    });
+  });
 
   document.getElementById('unlockAllBtn').addEventListener('click', ()=>{
     locked.clear();
-    document.querySelectorAll('.lockbtn').forEach(btn => btn.textContent="🔓");
-    for(const [k,el] of map){
-      if(k.endsWith('_lbs')) el.classList.remove("lockedField");
-    }
-    clearAllConflicts();
-    recalcAll();
+    document.querySelectorAll('input[data-k$="_lbs"]').forEach(inp=>inp.classList.remove("lockedField"));
+    document.querySelectorAll('.lockbtn').forEach(btn=>btn.textContent="🔓");
+    recalcAll(); scheduleAutosave();
   });
 
   document.getElementById('clearBtn').addEventListener('click', ()=>{
-    for(const [k,el] of map){
-      el.value='';
-      el.dataset.auto="0";
-      el.dataset.conflict="0";
-      el.classList.remove("lockedField");
-      el.style.border="";
-      el.style.background="";
+    for(const [k, el] of map){
+      if(k.endsWith('_lbs') && !isLocked(k)){
+        el.value=''; el.dataset.auto="0";
+      }
     }
-    locked.clear();
-    banner.style.display="none";
-    recalcAll();
+    recalcAll(); scheduleAutosave();
   });
 
-  document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
 
-  recalcAll();
+  for(const el of inputs){
+    if(el.disabled) continue;
+    el.addEventListener('input', ()=>{ el.dataset.auto="0"; scheduleRecalc(); scheduleAutosave(); });
+  }
+  for(const el of [meta.year, meta.make, meta.model, meta.owner, meta.date, meta.notes]){
+    el.addEventListener('input', ()=> scheduleAutosave());
+  }
+
+  refreshSavedList();
+  const auto = loadSetup("__autosave__");
+  if(auto) applySnapshot(auto);
+  else recalcAll();
+})();
 </script>
 </body>
 </html>
