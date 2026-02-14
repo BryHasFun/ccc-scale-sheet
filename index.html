@@ -194,6 +194,11 @@
             <div class="rowlbl">After</div><input data-k="LF_after_lbs" type="number" step="0.1"/><input data-k="LF_after_pct" type="number" step="0.1" disabled/><div class="unit">%</div>
           </div><div class="small">lbs entered; % auto</div>
         </div>
+/* Push the left/right column blocks down so they visually center on the car */
+.grid > div:first-child,
+.grid > div:last-child{
+  margin-top: 72px; /* ~1.5 block heights — adjust to taste */
+}
 
         <div class="block"><h3>LEFT SIDE</h3>
           <div class="rows">
@@ -576,3 +581,4 @@ recalcAll();
 
 </body>
 </html>
+
